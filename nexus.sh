@@ -80,18 +80,7 @@ if ! sudo apt install pkg-config libssl-dev -y; then
     exit 1
 fi
 
-# 检查并安装 PM2
-if ! command -v pm2 &> /dev/null; then
-    show_status "正在安装 PM2..." "progress"
-    if ! npm install -g pm2; then
-        show_status "安装 PM2 失败。" "error"
-        exit 1
-    fi
-else
-    show_status "PM2 已安装。" "success"
-fi
-
-# 启动服务
+# 直接启动服务（假设 PM2 已经安装）
 show_status "使用 PM2 启动 Nexus 服务..." "progress"
 if ! pm2 start "$HOME/.cargo/bin/cargo" --name "$SERVICE_NAME" -- run --release --bin prover -- beta.orchestrator.nexus.xyz; then
     show_status "启动服务失败。" "error"
