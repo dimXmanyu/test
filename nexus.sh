@@ -14,13 +14,13 @@ show_status() {
     local status="$2"
     case $status in
         "error")
-            echo -e "${RED}${BOLD}🚫 出错: ${message}${NORMAL}"
+            echo -e "${RED}${BOLD}出错: ${message}${NORMAL}"
             ;;
         "progress")
-            echo -e "${YELLOW}${BOLD}🔄 进行中: ${message}${NORMAL}"
+            echo -e "${YELLOW}${BOLD}进行中: ${message}${NORMAL}"
             ;;
         "success")
-            echo -e "${GREEN}${BOLD}🎉 成功: ${message}${NORMAL}"
+            echo -e "${GREEN}${BOLD}成功: ${message}${NORMAL}"
             ;;
         *)
             echo -e "${PINK}${BOLD}${message}${NORMAL}"
@@ -84,13 +84,6 @@ fi
 show_status "使用 PM2 启动 Nexus 服务..." "progress"
 if ! pm2 start "$HOME/.cargo/bin/cargo" --name "$SERVICE_NAME" -- run --release --bin prover -- beta.orchestrator.nexus.xyz; then
     show_status "启动服务失败。" "error"
-    exit 1
-fi
-
-# 设置 PM2 开机自启
-show_status "设置 PM2 开机自启..." "progress"
-if ! pm2 startup; then
-    show_status "设置 PM2 开机自启失败。" "error"
     exit 1
 fi
 
