@@ -80,11 +80,15 @@ if ! sudo apt install pkg-config libssl-dev -y; then
     exit 1
 fi
 
-# 安装 PM2
-show_status "正在安装 PM2..." "progress"
-if ! npm install -g pm2; then
-    show_status "安装 PM2 失败。" "error"
-    exit 1
+# 检查并安装 PM2
+if ! command -v pm2 &> /dev/null; then
+    show_status "正在安装 PM2..." "progress"
+    if ! npm install -g pm2; then
+        show_status "安装 PM2 失败。" "error"
+        exit 1
+    fi
+else
+    show_status "PM2 已安装。" "success"
 fi
 
 # 启动服务
