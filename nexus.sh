@@ -31,6 +31,9 @@ show_status() {
 # 定义服务名称
 SERVICE_NAME="nexus"
 
+# 设置为非交互模式
+export DEBIAN_FRONTEND=noninteractive
+
 # 安装 Rust
 show_status "正在安装 Rust..." "progress"
 if ! curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; then
@@ -82,17 +85,17 @@ fi
 
 # 直接启动服务（假设 PM2 已经安装）
 show_status "使用 PM2 启动 Nexus 服务..." "progress"
-if ! pm2 start "$HOME/.cargo/bin/cargo" --name "$SERVICE_NAME" -- run --release --bin prover -- beta.orchestrator.nexus.xyz; then
+if ! pm2 start "$HOME/.cargo/bin/cargo" --name "$SERVICE_NAME" -- run --release --bin prover -- beta.orchestrator.nexus.xyz 2>/dev/null; then
     show_status "启动服务失败。" "error"
     exit 1
 fi
 
 # 保存当前进程列表
-pm2 save
+pm2 save 2>/dev/null
 
 # 改进的服务状态检查逻辑
 show_status "服务状态：" "progress"
-if pm2 isRunning "$SERVICE_NAME"; then
+if pm2 isRunning "$SERVICE_NAME" 2>/dev/null; then
     show_status "服务正在运行。" "success"
 else
     show_status "获取服务状态失败。" "error"
